@@ -1,0 +1,13 @@
+name = "GeoEstimation"
+uuid = "a4aa24f8-9f24-4d1a-b848-66d123bfa54d"
+authors = ["Júlio Hoffimann <julio.hoffimann@gmail.com> and contributors"]
+version = "0.1.0"
+
+[compat]
+julia = "1.4"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
