@@ -2,7 +2,7 @@
 
 [![][travis-img]][travis-url] [![][codecov-img]][codecov-url]
 
-Basic estimation solver for the [GeoStats.jl](https://github.com/JuliaEarth/GeoStats.jl) framework.
+Basic estimation solvers for the [GeoStats.jl](https://github.com/JuliaEarth/GeoStats.jl) framework.
 
 ### InvDistWeight
 
