@@ -1,5 +1,56 @@
-# GeoEstimation
+# GeoEstimation.jl
 
-[![Build Status](https://github.com/JuliaEarth/GeoEstimation.jl/workflows/CI/badge.svg)](https://github.com/JuliaEarth/GeoEstimation.jl/actions)
-[![Build Status](https://travis-ci.com/JuliaEarth/GeoEstimation.jl.svg?branch=master)](https://travis-ci.com/JuliaEarth/GeoEstimation.jl)
-[![Coverage](https://codecov.io/gh/JuliaEarth/GeoEstimation.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaEarth/GeoEstimation.jl)
+[![][travis-img]][travis-url] [![][codecov-img]][codecov-url]
+
+Basic estimation solver for the [GeoStats.jl](https://github.com/JuliaEarth/GeoStats.jl) framework.
+
+### InvDistWeight
+
+This solver provides a high-performance implementation of the inverse distance weighting scheme
+introduced in the very early days of geostatistics (see [Shepard 1968](https://dl.acm.org/citation.cfm?id=810616)).
+It is perhaps the simplest first attempt in the literature to perform estimation based on the
+notion of proximity to data locations.
+
+This implementation makes use of k-d trees from the [NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl)
+package, which leads to a fast estimation method for large or high-resolution spatial domains.
+Although this method is recommended for fast assessment of a new field, it has poor statistical
+properties (lacks covariance model) and should mainly be used for qualitative purposes.
+
+### LocalWeightRegress
+
+This solver provides an implementation of locally weighted regression (a.k.a. LOESS) introduced by
+[Cleveland 1979](http://www.stat.washington.edu/courses/stat527/s13/readings/Cleveland_JASA_1979.pdf).
+It is the most natural generalization of inverse distance weighting in which one is allowed to use a
+custom weight function instead of distance-based weights.
+
+Like in the inverse distance weighting solver, this solver makes use of k-d trees from the
+[NearestNeighbors.jl](https://github.com/KristofferC/NearestNeighbors.jl) package for fast data
+lookup. Locally weighted regression (LWR or LOESS) is a popular non-parametric method, however
+it still has poor statistical properties compared to other estimation methods such as Kriging
+that explicitly model spatial correlation.
+
+In the current implementation, the estimation variance is computed assuming Gaussian residuals.
+
+## Installation
+
+Get the latest stable release with Julia's package manager:
+
+```julia
+] add GeoEstimation
+```
+
+## Usage
+
+This package is part of the [GeoStats.jl](https://github.com/JuliaEarth/GeoStats.jl) framework.
+
+For a simple example of usage, please check the main documentation.
+
+## Asking for help
+
+If you have any questions, please contact our community on the [gitter channel](https://gitter.im/JuliaEarth/GeoStats.jl).
+
+[travis-img]: https://travis-ci.org/JuliaEarth/GeoEstimation.jl.svg?branch=master
+[travis-url]: https://travis-ci.org/JuliaEarth/GeoEstimation.jl
+
+[codecov-img]: https://codecov.io/gh/JuliaEarth/GeoEstimation.jl/branch/master/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/JuliaEarth/GeoEstimation.jl
