@@ -3,9 +3,9 @@
 # ------------------------------------------------------------------
 
 """
-    LocalWeightRegress(var₁=>param₁, var₂=>param₂, ...)
+    LWR(var₁=>param₁, var₂=>param₂, ...)
 
-Locally weighted regression (LOESS) estimation solver.
+Locally weighted regression estimation solver.
 
 ## Parameters
 
@@ -19,13 +19,13 @@ Locally weighted regression (LOESS) estimation solver.
 * Cleveland 1979. *Robust locally weighted regression and smoothing scatterplots.*
 * Cleveland & Grosse 1991. *Computational methods for local regression.*
 """
-@estimsolver LocalWeightRegress begin
+@estimsolver LWR begin
   @param weightfun = h -> exp(-3*h^2)
   @param distance = Euclidean()
   @param neighbors = nothing
 end
 
-function solve(problem::EstimationProblem, solver::LocalWeightRegress)
+function solve(problem::EstimationProblem, solver::LWR)
   # retrieve problem info
   pdata = data(problem)
   pdomain = domain(problem)

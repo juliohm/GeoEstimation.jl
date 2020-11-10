@@ -3,7 +3,7 @@
 # ------------------------------------------------------------------
 
 """
-    InvDistWeight(var₁=>param₁, var₂=>param₂, ...)
+    IDW(var₁=>param₁, var₂=>param₂, ...)
 
 Inverse distance weighting estimation solver.
 
@@ -16,12 +16,12 @@ Inverse distance weighting estimation solver.
 
 Shepard 1968. *A two-dimensional interpolation function for irregularly-spaced data.*
 """
-@estimsolver InvDistWeight begin
+@estimsolver IDW begin
   @param neighbors = nothing
   @param distance = Euclidean()
 end
 
-function solve(problem::EstimationProblem, solver::InvDistWeight)
+function solve(problem::EstimationProblem, solver::IDW)
   # retrieve problem info
   pdata = data(problem)
   pdomain = domain(problem)

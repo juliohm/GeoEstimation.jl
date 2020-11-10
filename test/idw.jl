@@ -1,10 +1,10 @@
-@testset "InvDistWeight" begin
+@testset "IDW" begin
   # basic problem
   geodata = georef((variable=[1.,0.,1.],), [25. 50. 75.;  25. 75. 50.])
   domain  = RegularGrid(100,100)
   problem = EstimationProblem(geodata, domain, :variable)
 
-  solver = InvDistWeight(:variable => (neighbors=3,))
+  solver = IDW(:variable => (neighbors=3,))
 
   solution = solve(problem, solver)
 
@@ -17,7 +17,7 @@
   domain  = RegularGrid((1.0, -89.0), (359.0, 89.0), dims=(200, 100))
   problem = EstimationProblem(geodata, domain, :variable)
 
-  solver = InvDistWeight(:variable => (distance=Haversine(1.0),))
+  solver = IDW(:variable => (distance=Haversine(1.0),))
 
   solution = solve(problem, solver)
 

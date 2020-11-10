@@ -16,8 +16,6 @@ import GeoStatsBase: solve
 include("idw.jl")
 include("lwr.jl")
 
-export
-  InvDistWeight,
-  LocalWeightRegress
+export IDW, LWR
 
 end

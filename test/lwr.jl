@@ -1,4 +1,4 @@
-@testset "LocalWeightRegress" begin
+@testset "LWR" begin
   # 1D regression
   Random.seed!(2017)
   N = 100
@@ -9,7 +9,7 @@
   sdomain = RegularGrid((0.,), (1.,), dims=(N,))
   problem = EstimationProblem(sdata, sdomain, :y)
 
-  solver = LocalWeightRegress(:y => (neighbors=10,))
+  solver = LWR(:y => (neighbors=10,))
 
   solution = solve(problem, solver)
 
@@ -27,8 +27,8 @@
   sdomain = RegularGrid(100,100)
   problem = EstimationProblem(sdata, sdomain, :y)
 
-  solver₃ = LocalWeightRegress(:y => (neighbors=3,))
-  solver₄ = LocalWeightRegress(:y => (neighbors=4,))
+  solver₃ = LWR(:y => (neighbors=3,))
+  solver₄ = LWR(:y => (neighbors=4,))
 
   sol₃ = solve(problem, solver₃)
   sol₄ = solve(problem, solver₄)
@@ -57,7 +57,7 @@
   end
   problem = EstimationProblem(sdata, sdomain, :z)
 
-  solver = LocalWeightRegress(:z => (distance=Haversine(6371.),))
+  solver = LWR(:z => (distance=Haversine(6371.),))
 
   solution = solve(problem, solver)
 
