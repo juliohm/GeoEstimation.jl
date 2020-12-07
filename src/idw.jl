@@ -25,6 +25,8 @@ function solve(problem::EstimationProblem, solver::IDW)
   # retrieve problem info
   pdata = data(problem)
   pdomain = domain(problem)
+  N = ncoords(pdomain)
+  T = coordtype(pdomain)
 
   # result for each variable
   μs = []; σs = []
@@ -57,17 +59,7 @@ function solve(problem::EstimationProblem, solver::IDW)
       if M isa NearestNeighbors.MinkowskiMetric
         tree = KDTree(X, M)
       else
-        tree = BruteTree(X, M)
-      end
-
-      # keep track of estimated locations
-      estimated = falses(nelms(pdomain))
-
-      # consider data locations as already estimated
-      for (loc, datloc) in datamap(problem, var)
-        estimated[loc] = true
-        varμ[loc] = pdata[var][datloc]
-        varσ[loc] = zero(V)
+        tree = BallTree(X, M)
       end
 
       # determine number of nearest neighbors to use
@@ -76,23 +68,29 @@ function solve(problem::EstimationProblem, solver::IDW)
       @assert k ≤ ndata "number of neighbors must be smaller or equal to number of data points"
 
       # pre-allocate memory for coordinates
-      coords = MVector{ncoords(pdomain),coordtype(pdomain)}(undef)
+      x = MVector{N,T}(undef)
 
       # estimation loop
-      for location in traverse(pdomain, LinearPath())
-        if !estimated[location]
-          coordinates!(coords, pdomain, location)
+      for loc in traverse(pdomain, LinearPath())
+        coordinates!(x, pdomain, loc)
 
-          idxs, dists = knn(tree, coords, k)
+        is, ds = knn(tree, x, k)
+        ws = one(V) ./ ds
+        Σw = sum(ws)
 
-          weights = one(V) ./ dists
-          weights /= sum(weights)
-
-          values = view(z, idxs)
-
-          varμ[location] = sum(weights[i]*values[i] for i in eachindex(values))
-          varσ[location] = minimum(dists)
+        if isinf(Σw) # some distance is zero?
+          j = findfirst(iszero, ds)
+          μ = z[is[j]]
+          σ = zero(V)
+        else
+          ws /= Σw
+          vs  = view(z, is)
+          μ = sum(ws[i]*vs[i] for i in eachindex(vs))
+          σ = minimum(ds)
         end
+
+        varμ[loc] = μ
+        varσ[loc] = σ
       end
 
       push!(μs, var => varμ)

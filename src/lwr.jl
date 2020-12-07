@@ -29,6 +29,8 @@ function solve(problem::EstimationProblem, solver::LWR)
   # retrieve problem info
   pdata = data(problem)
   pdomain = domain(problem)
+  N = ncoords(pdomain)
+  T = coordtype(pdomain)
 
   # result for each variable
   μs = []; σs = []
@@ -63,7 +65,7 @@ function solve(problem::EstimationProblem, solver::LWR)
       if M isa NearestNeighbors.MinkowskiMetric
         tree = KDTree(X, M)
       else
-        tree = BruteTree(X, M)
+        tree = BallTree(X, M)
       end
 
       # pre-allocate memory for results
@@ -71,20 +73,20 @@ function solve(problem::EstimationProblem, solver::LWR)
       varσ = Vector{V}(undef, nelms(pdomain))
 
       # pre-allocate memory for coordinates
-      x = MVector{ncoords(pdomain),coordtype(pdomain)}(undef)
+      x = MVector{N,T}(undef)
 
       # estimation loop
-      for location in traverse(pdomain, LinearPath())
-        coordinates!(x, pdomain, location)
+      for loc in traverse(pdomain, LinearPath())
+        coordinates!(x, pdomain, loc)
 
         # find neighbors
-        inds, dists = knn(tree, x, k)
-        δs = dists ./ maximum(dists)
+        is, ds = knn(tree, x, k)
+        δs = ds ./ maximum(ds)
 
         # weighted least-squares
         Wₗ = Diagonal(w.(δs))
-        Xₗ = [ones(eltype(X), k) X[:,inds]']
-        zₗ = view(z, inds)
+        Xₗ = [ones(eltype(X), k) X[:,is]']
+        zₗ = view(z, is)
         θₗ = Xₗ'*Wₗ*Xₗ \ Xₗ'*Wₗ*zₗ
 
         # linear combination of response values
@@ -93,8 +95,8 @@ function solve(problem::EstimationProblem, solver::LWR)
         rₗ = Wₗ*Xₗ*(Xₗ'*Wₗ*Xₗ\xₒ)
         r̂ₒ = norm(rₗ)
 
-        varμ[location] = ẑₒ
-        varσ[location] = r̂ₒ
+        varμ[loc] = ẑₒ
+        varσ[loc] = r̂ₒ
       end
 
       push!(μs, var => varμ)
