@@ -1,10 +1,10 @@
 # GeoEstimation.jl
 
-[![][travis-img]][travis-url] [![][codecov-img]][codecov-url]
+[![][build-img]][build-url] [![][codecov-img]][codecov-url]
 
 Basic estimation solvers for the [GeoStats.jl](https://github.com/JuliaEarth/GeoStats.jl) framework.
 
-### InvDistWeight
+### IDW
 
 This solver provides a high-performance implementation of the inverse distance weighting scheme
 introduced in the very early days of geostatistics (see [Shepard 1968](https://dl.acm.org/citation.cfm?id=810616)).
@@ -16,7 +16,7 @@ package, which leads to a fast estimation method for large or high-resolution sp
 Although this method is recommended for fast assessment of a new field, it has poor statistical
 properties (lacks covariance model) and should mainly be used for qualitative purposes.
 
-### LocalWeightRegress
+### LWR
 
 This solver provides an implementation of locally weighted regression (a.k.a. LOESS) introduced by
 [Cleveland 1979](http://www.stat.washington.edu/courses/stat527/s13/readings/Cleveland_JASA_1979.pdf).
@@ -49,8 +49,8 @@ For a simple example of usage, please check the main documentation.
 
 If you have any questions, please contact our community on the [gitter channel](https://gitter.im/JuliaEarth/GeoStats.jl).
 
-[travis-img]: https://travis-ci.com/JuliaEarth/GeoEstimation.jl.svg?branch=master
-[travis-url]: https://travis-ci.com/JuliaEarth/GeoEstimation.jl
+[build-img]: https://img.shields.io/github/workflow/status/JuliaEarth/GeoEstimation.jl/CI?style=flat-square
+[build-url]: https://github.com/JuliaEarth/GeoEstimation.jl/actions
 
 [codecov-img]: https://codecov.io/gh/JuliaEarth/GeoEstimation.jl/branch/master/graph/badge.svg
 [codecov-url]: https://codecov.io/gh/JuliaEarth/GeoEstimation.jl
