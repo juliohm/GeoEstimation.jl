@@ -8,11 +8,9 @@ using Test, Pkg, Random
 ENV["GKSwstype"] = "100"
 
 # environment settings
+isCI = "CI" ∈ keys(ENV)
 islinux = Sys.islinux()
-istravis = "TRAVIS" ∈ keys(ENV)
-isappveyor = "APPVEYOR" ∈ keys(ENV)
-isCI = istravis || isappveyor
-visualtests = !isCI || (istravis && islinux)
+visualtests = !isCI || (isCI && islinux)
 if !isCI
   Pkg.add("Gtk")
   using Gtk
