@@ -19,7 +19,7 @@
     @plottest begin
       scatter(x, y, label="data", size=(1000,400))
       plot!(x, yhat, ribbon=yvar, fillalpha=.5, label="LWR")
-    end joinpath(datadir,"lwr-1D.png") !istravis
+    end joinpath(datadir,"lwr-1D.png") !isCI
   end
 
   # 2D regression
@@ -37,11 +37,11 @@
     @plottest begin
       contourf(sol₃)
       plot!(sdata)
-    end joinpath(datadir,"lwr-3neigh.png") !istravis
+    end joinpath(datadir,"lwr-3neigh.png") !isCI
     @plottest begin
       contourf(sol₄)
       plot!(sdata)
-    end joinpath(datadir,"lwr-4neigh.png") !istravis
+    end joinpath(datadir,"lwr-4neigh.png") !isCI
   end
 
   # Haversine distance
@@ -63,6 +63,6 @@
 
   if visualtests
     gr(size=(900,250))
-    @plottest contourf(solution) joinpath(datadir,"lwr-haversine.png") !istravis
+    @plottest contourf(solution) joinpath(datadir,"lwr-haversine.png") !isCI
   end
 end

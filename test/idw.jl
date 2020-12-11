@@ -9,7 +9,7 @@
   solution = solve(problem, solver)
 
   if visualtests
-    @plottest contourf(solution,size=(800,400)) joinpath(datadir,"idw.png") !istravis
+    @plottest contourf(solution,size=(800,400)) joinpath(datadir,"idw.png") !isCI
   end
 
   # haversine distance
@@ -22,6 +22,6 @@
   solution = solve(problem, solver)
 
   if visualtests
-    @plottest contourf(solution,size=(800,200)) joinpath(datadir,"idw-haversine.png") !istravis
+    @plottest contourf(solution,size=(800,200)) joinpath(datadir,"idw-haversine.png") !isCI
   end
 end
