@@ -28,6 +28,8 @@ function solve(problem::EstimationProblem, solver::IDW)
   N = ncoords(pdomain)
   T = coordtype(pdomain)
 
+  mactypeof = Dict(name(v) => mactype(v) for v in variables(problem))
+
   # result for each variable
   μs = []; σs = []
 
@@ -36,8 +38,8 @@ function solve(problem::EstimationProblem, solver::IDW)
       # get user parameters
       varparams = covars.params[(var,)]
 
-      # get variable type
-      V = variables(problem)[var]
+      # determine value type
+      V = mactypeof[var]
 
       # retrieve non-missing data
       locs = findall(!ismissing, pdata[var])
