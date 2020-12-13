@@ -17,7 +17,7 @@
   domain  = RegularGrid((1.0, -89.0), (359.0, 89.0), dims=(200, 100))
   problem = EstimationProblem(geodata, domain, :variable)
 
-  solver = IDW(:variable => (distance=Haversine(1.0),))
+  solver = IDW(:variable => (neighbors=3, distance=Haversine(1.0)))
 
   solution = solve(problem, solver)
 

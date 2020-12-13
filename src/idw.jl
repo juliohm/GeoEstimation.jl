@@ -9,8 +9,9 @@ Inverse distance weighting estimation solver.
 
 ## Parameters
 
-* `neighbors` - Number of neighbors (default to all data locations)
+* `neighbors` - Number of neighbors (default to 10% of data)
 * `distance`  - A distance defined in Distances.jl (default to `Euclidean()`)
+* `power`     - Power of the distances (default to `1`)
 
 ### References
 
@@ -19,6 +20,7 @@ Shepard 1968. *A two-dimensional interpolation function for irregularly-spaced d
 @estimsolver IDW begin
   @param neighbors = nothing
   @param distance = Euclidean()
+  @param power = 1
 end
 
 function solve(problem::EstimationProblem, solver::IDW)
@@ -48,26 +50,37 @@ function solve(problem::EstimationProblem, solver::IDW)
       z = 𝒟[var]
 
       # number of data points for variable
-      ndata = length(z)
-
-      @assert ndata > 0 "estimation requires data"
-
-      # allocate memory
-      varμ = Vector{V}(undef, nelms(pdomain))
-      varσ = Vector{V}(undef, nelms(pdomain))
-
-      # fit search tree
-      M = varparams.distance
-      if M isa NearestNeighbors.MinkowskiMetric
-        tree = KDTree(X, M)
-      else
-        tree = BallTree(X, M)
-      end
+      n = length(z)
 
       # determine number of nearest neighbors to use
-      k = varparams.neighbors == nothing ? ndata : varparams.neighbors
+      k = if isnothing(varparams.neighbors)
+        ceil(Int, 0.1n)
+      else
+        varparams.neighbors
+      end
 
-      @assert k ≤ ndata "number of neighbors must be smaller or equal to number of data points"
+      # determine distance type
+      D = varparams.distance
+
+      # determine power of distances
+      p = varparams.power
+
+      @assert n > 0 "estimation requires data"
+
+      @assert k ≤ n "invalid number of neighbors"
+
+      @assert p > 0 "power must be positive"
+
+      # fit search tree
+      if D isa NearestNeighbors.MinkowskiMetric
+        tree = KDTree(X, D)
+      else
+        tree = BallTree(X, D)
+      end
+
+      # pre-allocate memory for results
+      varμ = Vector{V}(undef, nelms(pdomain))
+      varσ = Vector{V}(undef, nelms(pdomain))
 
       # pre-allocate memory for coordinates
       x = MVector{N,T}(undef)
@@ -77,7 +90,7 @@ function solve(problem::EstimationProblem, solver::IDW)
         coordinates!(x, pdomain, loc)
 
         is, ds = knn(tree, x, k)
-        ws = one(V) ./ ds
+        ws = one(V) ./ ds.^p
         Σw = sum(ws)
 
         if isinf(Σw) # some distance is zero?
