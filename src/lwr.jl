@@ -9,9 +9,9 @@ Locally weighted regression estimation solver.
 
 ## Parameters
 
-* `weightfun` - Weighting function (default to `exp(-h^2/2)`)
+* `neighbors` - Number of neighbors (default to 10% of the data)
 * `distance`  - A distance from Distances.jl (default to `Euclidean()`)
-* `neighbors` - Number of neighbors (default to 20% of the data)
+* `weightfun` - Weighting function (default to `exp(-3*h^2/2)`)
 
 ### References
 
@@ -20,9 +20,9 @@ Locally weighted regression estimation solver.
 * Cleveland & Grosse 1991. *Computational methods for local regression.*
 """
 @estimsolver LWR begin
-  @param weightfun = h -> exp(-3*h^2)
-  @param distance = Euclidean()
   @param neighbors = nothing
+  @param distance = Euclidean()
+  @param weightfun = h -> exp(-3*h^2)
 end
 
 function solve(problem::EstimationProblem, solver::LWR)
@@ -52,22 +52,30 @@ function solve(problem::EstimationProblem, solver::LWR)
       z = 𝒟[var]
 
       # number of data points for variable
-      ndata = length(z)
+      n = length(z)
+
+      # determine number of nearest neighbors to use
+      k = if isnothing(varparams.neighbors)
+        ceil(Int, 0.1n)
+      else
+        varparams.neighbors
+      end
+
+      # determine distance type
+      D = varparams.distance
 
       # weight function
       w = varparams.weightfun
 
-      # number of nearest neighbors
-      k = isnothing(varparams.neighbors) ? ceil(Int, 0.2ndata) : varparams.neighbors
+      @assert n > 0 "estimation requires data"
 
-      @assert 0 < k ≤ ndata "invalid number of neighbors"
+      @assert k ≤ n "invalid number of neighbors"
 
       # fit search tree
-      M = varparams.distance
-      if M isa NearestNeighbors.MinkowskiMetric
-        tree = KDTree(X, M)
+      if D isa NearestNeighbors.MinkowskiMetric
+        tree = KDTree(X, D)
       else
-        tree = BallTree(X, M)
+        tree = BallTree(X, D)
       end
 
       # pre-allocate memory for results

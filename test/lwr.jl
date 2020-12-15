@@ -59,7 +59,7 @@
   end
   problem = EstimationProblem(sdata, sdomain, :z)
 
-  solver = LWR(:z => (distance=Haversine(6371.),))
+  solver = LWR(:z => (distance=Haversine(6371.),neighbors=49))
 
   solution = solve(problem, solver)
 
