@@ -109,9 +109,9 @@ function solve(problem::EstimationProblem, solver::IDW)
       end
 
       push!(μs, var => varμ)
-      push!(σs, var => varσ)
+      push!(σs, Symbol(var,:Var) => varσ)
     end
   end
 
-  EstimationSolution(pdomain, Dict(μs), Dict(σs))
+  georef((; μs..., σs...), pdomain)
 end

@@ -13,9 +13,8 @@
 
   solution = solve(problem, solver)
 
-  ysol = solution[:y]
-  yhat = ysol[:y]
-  yvar = ysol[:yvar]
+  yhat = solution[:y]
+  yvar = solution[:yVar]
 
   if visualtests
     @plottest begin
