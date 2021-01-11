@@ -9,7 +9,7 @@ Locally weighted regression estimation solver.
 
 ## Parameters
 
-* `neighbors` - Number of neighbors (default to 10% of the data)
+* `neighbors` - Number of neighbors (default to all the data)
 * `distance`  - A distance from Distances.jl (default to `Euclidean()`)
 * `weightfun` - Weighting function (default to `exp(-3*h^2/2)`)
 
@@ -55,11 +55,7 @@ function solve(problem::EstimationProblem, solver::LWR)
       n = length(z)
 
       # determine number of nearest neighbors to use
-      k = if isnothing(varparams.neighbors)
-        ceil(Int, 0.1n)
-      else
-        varparams.neighbors
-      end
+      k = isnothing(varparams.neighbors) ? n : varparams.neighbors
 
       # determine distance type
       D = varparams.distance

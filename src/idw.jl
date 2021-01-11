@@ -9,7 +9,7 @@ Inverse distance weighting estimation solver.
 
 ## Parameters
 
-* `neighbors` - Number of neighbors (default to 10% of data)
+* `neighbors` - Number of neighbors (default to all the data)
 * `distance`  - A distance defined in Distances.jl (default to `Euclidean()`)
 * `power`     - Power of the distances (default to `1`)
 
@@ -53,11 +53,7 @@ function solve(problem::EstimationProblem, solver::IDW)
       n = length(z)
 
       # determine number of nearest neighbors to use
-      k = if isnothing(varparams.neighbors)
-        ceil(Int, 0.1n)
-      else
-        varparams.neighbors
-      end
+      k = isnothing(varparams.neighbors) ? n : varparams.neighbors
 
       # determine distance type
       D = varparams.distance
