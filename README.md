@@ -2,7 +2,7 @@
 
 [![][build-img]][build-url] [![][codecov-img]][codecov-url]
 
-Basic estimation solvers for the [GeoStats.jl](https://github.com/JuliaEarth/GeoStats.jl) framework.
+Geostatistical estimation solvers for the [GeoStats.jl](https://github.com/JuliaEarth/GeoStats.jl) framework.
 
 ### IDW
 
