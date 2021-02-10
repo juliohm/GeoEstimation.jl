@@ -14,13 +14,12 @@
   solution = solve(problem, solver)
 
   yhat = solution[:y]
-  yvar = solution[:yVar]
+  yvar = solution[Symbol("y-variance")]
 
   if visualtests
-    @plottest begin
-      scatter(x, y, label="data", size=(1000,400))
-      plot!(x, yhat, ribbon=yvar, fillalpha=.5, label="LWR")
-    end joinpath(datadir,"lwr-1D.png") !isCI
+    plt = scatter(x, y, label="data", size=(1000,400))
+    plot!(x, yhat, ribbon=yvar, fillalpha=.5, label="LWR")
+    @test_ref_plot "data/lwr-1D.png" plt
   end
 
   # 2D regression
@@ -35,14 +34,13 @@
   sol₄ = solve(problem, solver₄)
 
   if visualtests
-    @plottest begin
-      contourf(sol₃)
-      plot!(sdata)
-    end joinpath(datadir,"lwr-3neigh.png") !isCI
-    @plottest begin
-      contourf(sol₄)
-      plot!(sdata)
-    end joinpath(datadir,"lwr-4neigh.png") !isCI
+    plt = contourf(sol₃)
+    plot!(sdata)
+    @test_ref_plot "data/lwr-3neigh.png" plt
+
+    plt = contourf(sol₄)
+    plot!(sdata)
+    @test_ref_plot "data/lwr-4neigh.png" plt
   end
 
   # Haversine distance
@@ -64,6 +62,6 @@
 
   if visualtests
     gr(size=(900,250))
-    @plottest contourf(solution) joinpath(datadir,"lwr-haversine.png") !isCI
+    @test_ref_plot "data/lwr-haversine.png" contourf(solution)
   end
 end
