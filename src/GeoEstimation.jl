@@ -4,6 +4,7 @@
 
 module GeoEstimation
 
+using Meshes
 using GeoStatsBase
 
 using NearestNeighbors

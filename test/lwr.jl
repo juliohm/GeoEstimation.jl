@@ -6,7 +6,7 @@
   y = x.^2 .+ [i/1000*randn() for i=1:N]
 
   sdata   = georef((y=y,), reshape(x, 1, length(x)))
-  sdomain = RegularGrid((0.,), (1.,), dims=(N,))
+  sdomain = CartesianGrid((0.,), (1.,), dims=(N,))
   problem = EstimationProblem(sdata, sdomain, :y)
 
   solver = LWR(:y => (neighbors=10,))
@@ -19,12 +19,12 @@
   if visualtests
     plt = scatter(x, y, label="data", size=(1000,400))
     plot!(x, yhat, ribbon=yvar, fillalpha=.5, label="LWR")
-    @test_ref_plot "data/lwr-1D.png" plt
+    @test_reference "data/lwr-1D.png" plt
   end
 
   # 2D regression
   sdata   = georef((y=[1.,0.,1.,0.],), [25. 50. 75. 75.;  25. 75. 50. 25.])
-  sdomain = RegularGrid(100,100)
+  sdomain = CartesianGrid(100,100)
   problem = EstimationProblem(sdata, sdomain, :y)
 
   solver₃ = LWR(:y => (neighbors=3,))
@@ -36,11 +36,11 @@
   if visualtests
     plt = contourf(sol₃)
     plot!(sdata)
-    @test_ref_plot "data/lwr-3neigh.png" plt
+    @test_reference "data/lwr-3neigh.png" plt
 
     plt = contourf(sol₄)
     plot!(sdata)
-    @test_ref_plot "data/lwr-4neigh.png" plt
+    @test_reference "data/lwr-4neigh.png" plt
   end
 
   # Haversine distance
@@ -52,7 +52,7 @@
     dims = (180, 91)
     start = (1.0, -89.01098901098901)
     finish = (359.0, 89.01098901098901)
-    RegularGrid(start, finish, dims=dims)
+    CartesianGrid(start, finish, dims=dims)
   end
   problem = EstimationProblem(sdata, sdomain, :z)
 
@@ -62,6 +62,6 @@
 
   if visualtests
     gr(size=(900,250))
-    @test_ref_plot "data/lwr-haversine.png" contourf(solution)
+    @test_reference "data/lwr-haversine.png" contourf(solution)
   end
 end
