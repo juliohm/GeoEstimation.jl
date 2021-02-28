@@ -29,7 +29,7 @@ function solve(problem::EstimationProblem, solver::LWR)
   # retrieve problem info
   pdata = data(problem)
   pdomain = domain(problem)
-  N = ncoords(pdomain)
+  N = embeddim(pdomain)
   T = coordtype(pdomain)
 
   mactypeof = Dict(name(v) => mactype(v) for v in variables(problem))
@@ -48,7 +48,7 @@ function solve(problem::EstimationProblem, solver::LWR)
       # retrieve non-missing data
       locs = findall(!ismissing, pdata[var])
       𝒟 = view(pdata, locs)
-      X = coordinates(𝒟)
+      X = coordinates(𝒟, 1:nelements(𝒟))
       z = 𝒟[var]
 
       # number of data points for variable
@@ -75,8 +75,8 @@ function solve(problem::EstimationProblem, solver::LWR)
       end
 
       # pre-allocate memory for results
-      varμ = Vector{V}(undef, nelms(pdomain))
-      varσ = Vector{V}(undef, nelms(pdomain))
+      varμ = Vector{V}(undef, nelements(pdomain))
+      varσ = Vector{V}(undef, nelements(pdomain))
 
       # pre-allocate memory for coordinates
       x = MVector{N,T}(undef)
