@@ -6,9 +6,10 @@ module GeoEstimation
 
 using Meshes
 using GeoStatsBase
+using Variography
+using KrigingEstimators
 
 using NearestNeighbors
-using StaticArrays
 using Distances
 using LinearAlgebra
 
@@ -16,7 +17,8 @@ import GeoStatsBase: solve
 
 include("idw.jl")
 include("lwr.jl")
+include("kriging.jl")
 
-export IDW, LWR
+export IDW, LWR, Kriging
 
 end

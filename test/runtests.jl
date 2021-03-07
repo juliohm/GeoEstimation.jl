@@ -1,6 +1,7 @@
 using GeoEstimation
 using Meshes
 using GeoStatsBase
+using Variography
 using Distances
 using Plots; gr(size=(600,400))
 using ReferenceTests, ImageIO
@@ -18,7 +19,8 @@ datadir = joinpath(@__DIR__,"data")
 # list of tests
 testfiles = [
   "idw.jl",
-  "lwr.jl"
+  "lwr.jl",
+  "kriging.jl"
 ]
 
 @testset "GeoEstimation.jl" begin

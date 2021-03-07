@@ -29,8 +29,6 @@ function solve(problem::EstimationProblem, solver::LWR)
   # retrieve problem info
   pdata = data(problem)
   pdomain = domain(problem)
-  N = embeddim(pdomain)
-  T = coordtype(pdomain)
 
   mactypeof = Dict(name(v) => mactype(v) for v in variables(problem))
 
@@ -48,11 +46,7 @@ function solve(problem::EstimationProblem, solver::LWR)
       # retrieve non-missing data
       locs = findall(!ismissing, pdata[var])
       𝒟 = view(pdata, locs)
-      X = coordinates(𝒟, 1:nelements(𝒟))
-      z = 𝒟[var]
-
-      # number of data points for variable
-      n = length(z)
+      n = nelements(𝒟)
 
       # determine number of nearest neighbors to use
       k = isnothing(varparams.neighbors) ? n : varparams.neighbors
@@ -68,22 +62,23 @@ function solve(problem::EstimationProblem, solver::LWR)
       @assert k ≤ n "invalid number of neighbors"
 
       # fit search tree
+      X = [coordinates(centroid(𝒟, i)) for i in 1:nelements(𝒟)]
       if D isa NearestNeighbors.MinkowskiMetric
         tree = KDTree(X, D)
       else
         tree = BallTree(X, D)
       end
 
+      # lookup non-missing values
+      z = 𝒟[var]
+
       # pre-allocate memory for results
       varμ = Vector{V}(undef, nelements(pdomain))
       varσ = Vector{V}(undef, nelements(pdomain))
 
-      # pre-allocate memory for coordinates
-      x = MVector{N,T}(undef)
-
       # estimation loop
       for loc in traverse(pdomain, LinearPath())
-        coordinates!(x, pdomain, loc)
+        x = coordinates(centroid(pdomain, loc))
 
         # find neighbors
         is, ds = knn(tree, x, k)
@@ -91,7 +86,7 @@ function solve(problem::EstimationProblem, solver::LWR)
 
         # weighted least-squares
         Wₗ = Diagonal(w.(δs))
-        Xₗ = [ones(eltype(X), k) X[:,is]']
+        Xₗ = [ones(eltype(x), k) reduce(hcat, X[is])']
         zₗ = view(z, is)
         θₗ = Xₗ'*Wₗ*Xₗ \ Xₗ'*Wₗ*zₗ
 
