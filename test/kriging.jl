@@ -28,7 +28,7 @@
   # --------------------
 
   data2D = georef((z=[1.,0.,1.],), [(25.,25.), (50.,75.), (75.,50.)])
-  grid2D = CartesianGrid(100,100)
+  grid2D = CartesianGrid((100,100), (0.5,0.5), (1.0,1.0))
 
   problem = EstimationProblem(data2D, grid2D, :z)
 
@@ -39,9 +39,9 @@
   # basic checks
   inds = LinearIndices(size(grid2D))
   S = solution[:z]
-  @test isapprox(S[inds[26,26]], 1., atol=1e-3)
-  @test isapprox(S[inds[51,76]], 0., atol=1e-3)
-  @test isapprox(S[inds[76,51]], 1., atol=1e-3)
+  @test isapprox(S[inds[25,25]], 1., atol=1e-3)
+  @test isapprox(S[inds[50,75]], 0., atol=1e-3)
+  @test isapprox(S[inds[75,50]], 1., atol=1e-3)
 
   if visualtests
     @test_reference "data/krig-2D-global.png" contourf(solution)
@@ -60,9 +60,9 @@
   # basic checks
   inds = LinearIndices(size(grid2D))
   S = solution[:z]
-  @test isapprox(S[inds[26,26]], 1., atol=1e-3)
-  @test isapprox(S[inds[51,76]], 0., atol=1e-3)
-  @test isapprox(S[inds[76,51]], 1., atol=1e-3)
+  @test isapprox(S[inds[25,25]], 1., atol=1e-3)
+  @test isapprox(S[inds[50,75]], 0., atol=1e-3)
+  @test isapprox(S[inds[75,50]], 1., atol=1e-3)
 
   if visualtests
     @test_reference "data/krig-2D-nearest.png" contourf(solution)
@@ -82,9 +82,9 @@
   # basic checks
   inds = LinearIndices(size(grid2D))
   S = solution[:z]
-  @test isapprox(S[inds[26,26]], 1., atol=1e-3)
-  @test isapprox(S[inds[51,76]], 0., atol=1e-3)
-  @test isapprox(S[inds[76,51]], 1., atol=1e-3)
+  @test isapprox(S[inds[25,25]], 1., atol=1e-3)
+  @test isapprox(S[inds[50,75]], 0., atol=1e-3)
+  @test isapprox(S[inds[75,50]], 1., atol=1e-3)
 
   if visualtests
     @test_reference "data/krig-2D-local.png" contourf(solution)
