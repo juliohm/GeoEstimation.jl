@@ -31,6 +31,10 @@ that explicitly model spatial correlation.
 
 In the current implementation, the estimation variance is computed assuming Gaussian residuals.
 
+### Kriging
+
+TODO
+
 ## Installation
 
 Get the latest stable release with Julia's package manager:
