@@ -33,7 +33,11 @@ In the current implementation, the estimation variance is computed assuming Gaus
 
 ### Kriging
 
-TODO
+This polyalgorithm solver provides an implementation of various forms of Kriging introduced by
+[Matheron 1971](https://books.google.com.br/books/about/The_Theory_of_Regionalized_Variables_and.html).
+Kriging is a popular method in various industries due to its good statistical properties and flexibility.
+Unlike the previous solvers, Kriging relies on the specification of a variogram model, which can be
+fit to geospatial data.
 
 ## Installation
 
