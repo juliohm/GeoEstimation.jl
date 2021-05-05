@@ -14,7 +14,7 @@
   solution = solve(problem, solver)
 
   yhat = solution[:y]
-  yvar = solution[Symbol("y-variance")]
+  yvar = solution[:y_variance]
 
   if visualtests
     plt = scatter(x, y, label="data", size=(1000,400))

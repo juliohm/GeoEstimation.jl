@@ -100,7 +100,7 @@ function solve(problem::EstimationProblem, solver::IDW)
       end
 
       push!(μs, var => varμ)
-      push!(σs, Symbol(var,"-distance") => varσ)
+      push!(σs, Symbol(var,"_distance") => varσ)
     end
   end
 

@@ -101,7 +101,7 @@ function solve(problem::EstimationProblem, solver::LWR)
       end
 
       push!(μs, var => varμ)
-      push!(σs, Symbol(var,"-variance") => varσ)
+      push!(σs, Symbol(var,"_variance") => varσ)
     end
   end
 
