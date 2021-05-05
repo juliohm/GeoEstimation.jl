@@ -107,7 +107,7 @@ function preprocess(problem::EstimationProblem, solver::Kriging)
           if neigh isa MetricBall
             bsearcher = KBallSearch(pdata, maxneighbors, neigh)
           else
-            searcher  = NeighborhoodSearch(pdata, neigh)
+            searcher  = BallSearch(pdata, neigh)
             bsearcher = BoundedSearch(searcher, maxneighbors)
           end
         else

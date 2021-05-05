@@ -34,11 +34,11 @@
   sol₄ = solve(problem, solver₄)
 
   if visualtests
-    plt = contourf(sol₃)
+    plt = contourf(sol₃, size=(800,400))
     plot!(sdata)
     @test_reference "data/lwr-3neigh.png" plt
 
-    plt = contourf(sol₄)
+    plt = contourf(sol₄, size=(800,400))
     plot!(sdata)
     @test_reference "data/lwr-4neigh.png" plt
   end
@@ -61,7 +61,6 @@
   solution = solve(problem, solver)
 
   if visualtests
-    gr(size=(900,250))
-    @test_reference "data/lwr-haversine.png" contourf(solution)
+    @test_reference "data/lwr-haversine.png" contourf(solution, size=(900,250))
   end
 end

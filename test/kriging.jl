@@ -19,7 +19,7 @@
   if visualtests
     for i in 1:3
       solution, sname = solutions[i], solnames[i]
-      @test_reference "data/krig-1D-$(sname).png" plot(solution)
+      @test_reference "data/krig-1D-$(sname).png" plot(solution, size=(600,200))
     end
   end
 
@@ -44,7 +44,7 @@
   @test isapprox(S[inds[75,50]], 1., atol=1e-3)
 
   if visualtests
-    @test_reference "data/krig-2D-global.png" contourf(solution)
+    @test_reference "data/krig-2D-global.png" contourf(solution, size=(800,400))
   end
 
   # ---------------------
@@ -65,7 +65,7 @@
   @test isapprox(S[inds[75,50]], 1., atol=1e-3)
 
   if visualtests
-    @test_reference "data/krig-2D-nearest.png" contourf(solution)
+    @test_reference "data/krig-2D-nearest.png" contourf(solution, size=(800,400))
   end
 
   # -------------------
@@ -87,6 +87,6 @@
   @test isapprox(S[inds[75,50]], 1., atol=1e-3)
 
   if visualtests
-    @test_reference "data/krig-2D-local.png" contourf(solution)
+    @test_reference "data/krig-2D-local.png" contourf(solution, size=(800,400))
   end
 end
