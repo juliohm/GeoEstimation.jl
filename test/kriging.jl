@@ -12,6 +12,7 @@
   local_kriging = Kriging(:z => (variogram=GaussianVariogram(range=35.,nugget=0.),
                                  maxneighbors=3, neighborhood=NormBall(100.)))
 
+  Random.seed!(2021)
   solvers   = [global_kriging, nearest_kriging, local_kriging]
   solnames  = ["global", "nearest", "local"]
   solutions = [solve(problem, solver) for solver in solvers]
@@ -34,6 +35,7 @@
 
   solver = Kriging(:z => (variogram=GaussianVariogram(range=35.,nugget=0.),))
 
+  Random.seed!(2021)
   solution = solve(problem, solver)
 
   # basic checks
@@ -55,6 +57,7 @@
 
   solver = Kriging(:z => (variogram=GaussianVariogram(range=35.,nugget=0.), maxneighbors=3))
 
+  Random.seed!(2021)
   solution = solve(problem, solver)
 
   # basic checks
@@ -77,6 +80,7 @@
   solver = Kriging(:z => (variogram=GaussianVariogram(range=35.,nugget=0.),
                           maxneighbors=3, neighborhood=NormBall(100.)))
 
+  Random.seed!(2021)
   solution = solve(problem, solver)
 
   # basic checks
