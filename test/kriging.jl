@@ -7,7 +7,7 @@
   grid1D = CartesianGrid(100)
   problem = EstimationProblem(data1D, grid1D, :z)
 
-  global_kriging = Kriging(:z => (variogram=GaussianVariogram(range=35.,nugget=0.),))
+  global_kriging = Kriging(:z => (variogram=GaussianVariogram(range=35.,nugget=0.), maxneighbors=nothing))
   nearest_kriging = Kriging(:z => (variogram=GaussianVariogram(range=35.,nugget=0.), maxneighbors=3))
   local_kriging = Kriging(:z => (variogram=GaussianVariogram(range=35.,nugget=0.),
                                  maxneighbors=3, neighborhood=NormBall(100.)))
@@ -33,7 +33,7 @@
 
   problem = EstimationProblem(data2D, grid2D, :z)
 
-  solver = Kriging(:z => (variogram=GaussianVariogram(range=35.,nugget=0.),))
+  solver = Kriging(:z => (variogram=GaussianVariogram(range=35.,nugget=0.), maxneighbors=nothing))
 
   Random.seed!(2021)
   solution = solve(problem, solver)
