@@ -37,13 +37,10 @@
 
   Random.seed!(2021)
   solution = solve(problem, solver)
-
-  # basic checks
-  inds = LinearIndices(size(grid2D))
-  S = solution[:z]
-  @test isapprox(S[inds[25,25]], 1., atol=1e-3)
-  @test isapprox(S[inds[50,75]], 0., atol=1e-3)
-  @test isapprox(S[inds[75,50]], 1., atol=1e-3)
+  Z = asarray(solution, :z)
+  @test isapprox(Z[25,25], 1., atol=1e-3)
+  @test isapprox(Z[50,75], 0., atol=1e-3)
+  @test isapprox(Z[75,50], 1., atol=1e-3)
 
   if visualtests
     @test_reference "data/krig-2D-global.png" contourf(solution, size=(800,400))
@@ -55,17 +52,14 @@
 
   problem = EstimationProblem(data2D, grid2D, :z)
 
-  solver = Kriging(:z => (variogram=GaussianVariogram(range=35.,nugget=0.), maxneighbors=3))
+  solver = Kriging(:z => (variogram=GaussianVariogram(range=35.,nugget=0.),))
 
   Random.seed!(2021)
   solution = solve(problem, solver)
-
-  # basic checks
-  inds = LinearIndices(size(grid2D))
-  S = solution[:z]
-  @test isapprox(S[inds[25,25]], 1., atol=1e-3)
-  @test isapprox(S[inds[50,75]], 0., atol=1e-3)
-  @test isapprox(S[inds[75,50]], 1., atol=1e-3)
+  Z = asarray(solution, :z)
+  @test isapprox(Z[25,25], 1., atol=1e-3)
+  @test isapprox(Z[50,75], 0., atol=1e-3)
+  @test isapprox(Z[75,50], 1., atol=1e-3)
 
   if visualtests
     @test_reference "data/krig-2D-nearest.png" contourf(solution, size=(800,400))

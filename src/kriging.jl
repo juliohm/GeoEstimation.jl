@@ -74,7 +74,8 @@ end
 function preprocess(problem::EstimationProblem, solver::Kriging)
   # retrieve problem info
   pdomain = domain(problem)
-  pdata = data(problem)
+  pdata   = data(problem)
+  ndata   = nelements(pdata)
 
   # result of preprocessing
   preproc = Dict{Symbol,NamedTuple}()
@@ -101,6 +102,8 @@ function preprocess(problem::EstimationProblem, solver::Kriging)
 
       # determine neighborhood search method
       if varparams.maxneighbors ≠ nothing
+        # upper bound in maxneighbors
+        maxneighbors > ndata && (maxneighbors = ndata)
         if varparams.neighborhood ≠ nothing
           # local search with a neighborhood
           neigh = varparams.neighborhood
