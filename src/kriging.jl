@@ -196,13 +196,13 @@ function solve_approx(problem::EstimationProblem, var::Symbol, preproc)
         𝒟 = view(pdata, nview)
 
         # fit estimator to data
-        krig = fit(estimator, 𝒟, var)
+        krig = fit(estimator, 𝒟)
 
         # retrieve element at location
         uₒ = pdomain[location]
 
         # save mean and variance
-        μ, σ² = predict(krig, uₒ)
+        μ, σ² = predict(krig, var, uₒ)
 
         varμ[location] = μ
         varσ[location] = σ²
@@ -234,13 +234,13 @@ function solve_exact(problem::EstimationProblem, var::Symbol, preproc)
     𝒟 = view(pdata, locs)
 
     # fit estimator once
-    krig = fit(estimator, 𝒟, var)
+    krig = fit(estimator, 𝒟)
 
     # predict at all locations
     for location in traverse(pdomain, LinearPath())
       uₒ = pdomain[location]
 
-      μ, σ² = predict(krig, uₒ)
+      μ, σ² = predict(krig, var, uₒ)
 
       varμ[location] = μ
       varσ[location] = σ²
