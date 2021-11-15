@@ -25,13 +25,13 @@ Latter options override former options. For example, by specifying
 default with the `variogram` only.
 
 * `minneighbors` - Minimum number of neighbors (default to `1`)
-* `maxneighbors` - Maximum number of neighbors (default to `10`)
+* `maxneighbors` - Maximum number of neighbors (default to `nothing`)
 * `neighborhood` - Search neighborhood (default to `nothing`)
 * `distance`     - Distance used to find nearest neighbors (default to `Euclidean()`)
 
 The `maxneighbors` option can be used to perform approximate Kriging
 with a subset of data points per estimation location. If `maxneighbors`
-is set to `nothing`, global Kriging is performed instead. Two neighborhood
+is set to `nothing`, global Kriging is performed. Two neighborhood
 search methods are available depending on the value of `neighborhood`:
 
 * If a `neighborhood` is provided, local Kriging is performed by sliding
@@ -66,7 +66,7 @@ julia> Kriging()
   @param degree = nothing
   @param drifts = nothing
   @param minneighbors = 1
-  @param maxneighbors = 10
+  @param maxneighbors = nothing
   @param neighborhood = nothing
   @param distance = Euclidean()
 end
