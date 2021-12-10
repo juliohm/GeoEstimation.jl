@@ -24,4 +24,28 @@
   if visualtests
     @test_reference "data/idw-haversine.png" contourf(solution,size=(800,200))
   end
+
+  # -------------------
+  # COMPOSITIONAL DATA
+  # -------------------
+
+  table = (z=[Composition(0.1,0.2),Composition(0.3,0.4),Composition(0.5,0.6)],)
+  coord = [(25.,25.), (50.,75.), (75.,50.)]
+  data = georef(table, coord)
+  grid = CartesianGrid(100, 100)
+
+  problem = EstimationProblem(data, grid, :z)
+
+  solver = IDW()
+
+  Random.seed!(2021)
+  solution = solve(problem, solver)
+
+  inds = LinearIndices(size(grid))
+  S = solution[:z]
+
+  # basic checks
+  @test CoDa.distance(S[inds[25,25]], Composition(0.1,0.2)) < 1e-2
+  @test CoDa.distance(S[inds[50,75]], Composition(0.3,0.4)) < 1e-2
+  @test CoDa.distance(S[inds[75,50]], Composition(0.5,0.6)) < 1e-2
 end

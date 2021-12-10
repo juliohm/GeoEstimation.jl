@@ -72,22 +72,18 @@ function solve(problem::EstimationProblem, solver::IDW)
       # lookup non-missing values
       z = 𝒟[var]
 
-      # pre-allocate memory for results
-      varμ = Vector{V}(undef, nelements(pdomain))
-      varσ = Vector{V}(undef, nelements(pdomain))
-
       # estimation loop
-      for loc in traverse(pdomain, LinearPath())
+      locations = traverse(pdomain, LinearPath())
+      predictions = map(locations) do loc
         x = coordinates(centroid(pdomain, loc))
-
         is, ds = knn(tree, x, k)
-        ws = one(V) ./ ds.^p
+        ws = 1 ./ ds.^p
         Σw = sum(ws)
 
         if isinf(Σw) # some distance is zero?
           j = findfirst(iszero, ds)
           μ = z[is[j]]
-          σ = zero(V)
+          σ = zero(eltype(ds))
         else
           ws /= Σw
           vs  = view(z, is)
@@ -95,9 +91,11 @@ function solve(problem::EstimationProblem, solver::IDW)
           σ = minimum(ds)
         end
 
-        varμ[loc] = μ
-        varσ[loc] = σ
+        μ, σ
       end
+  
+      varμ = first.(predictions)
+      varσ = last.(predictions)
 
       push!(μs, var => varμ)
       push!(σs, Symbol(var,"_distance") => varσ)
