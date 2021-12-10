@@ -6,6 +6,7 @@ using Distances
 using Plots; gr(size=(600,400))
 using ReferenceTests, ImageIO
 using Test, Random
+using CoDa
 
 # workaround GR warnings
 ENV["GKSwstype"] = "100"

@@ -162,32 +162,24 @@ function solve_approx(problem::EstimationProblem, var::Symbol, preproc)
     pdata = data(problem)
     pdomain = domain(problem)
 
-    mactypeof = Dict(name(v) => mactype(v) for v in variables(problem))
-
     # unpack preprocessed parameters
     estimator, minneighbors, maxneighbors, bsearcher = preproc[var]
-
-    # determine value type
-    V = mactypeof[var]
-
-    # pre-allocate memory for result
-    varμ = Vector{V}(undef, nelements(pdomain))
-    varσ = Vector{V}(undef, nelements(pdomain))
 
     # pre-allocate memory for neighbors
     neighbors = Vector{Int}(undef, maxneighbors)
 
-    # estimation loop
-    for location in traverse(pdomain, LinearPath())
-      pₒ = centroid(pdomain, location)
+    # predict at all locations
+    locations = traverse(pdomain, LinearPath())
+    predictions = map(locations) do loc
+
+      pₒ = centroid(pdomain, loc)
 
       # find neighbors with previously estimated values
       nneigh = search!(neighbors, pₒ, bsearcher)
 
       # skip location in there are too few neighbors
       if nneigh < minneighbors
-        varμ[location] = NaN
-        varσ[location] = NaN
+        missing, missing
       else
         # final set of neighbors
         nview = view(neighbors, 1:nneigh)
@@ -199,15 +191,15 @@ function solve_approx(problem::EstimationProblem, var::Symbol, preproc)
         krig = fit(estimator, 𝒟)
 
         # retrieve element at location
-        uₒ = pdomain[location]
+        uₒ = pdomain[loc]
 
         # save mean and variance
-        μ, σ² = predict(krig, var, uₒ)
-
-        varμ[location] = μ
-        varσ[location] = σ²
+        predict(krig, var, uₒ)
       end
     end
+
+    varμ = first.(predictions)
+    varσ = last.(predictions)
 
     varμ, varσ
 end
@@ -217,17 +209,8 @@ function solve_exact(problem::EstimationProblem, var::Symbol, preproc)
     pdata = data(problem)
     pdomain = domain(problem)
 
-    mactypeof = Dict(name(v) => mactype(v) for v in variables(problem))
-
     # unpack preprocessed parameters
     estimator, minneighbors, maxneighbors, bsearcher = preproc[var]
-
-    # determine value type
-    V = mactypeof[var]
-
-    # pre-allocate memory for result
-    varμ = Vector{V}(undef, nelements(pdomain))
-    varσ = Vector{V}(undef, nelements(pdomain))
 
     # retrieve non-missing data
     locs = findall(!ismissing, pdata[var])
@@ -237,14 +220,14 @@ function solve_exact(problem::EstimationProblem, var::Symbol, preproc)
     krig = fit(estimator, 𝒟)
 
     # predict at all locations
-    for location in traverse(pdomain, LinearPath())
-      uₒ = pdomain[location]
-
-      μ, σ² = predict(krig, var, uₒ)
-
-      varμ[location] = μ
-      varσ[location] = σ²
+    locations = traverse(pdomain, LinearPath())
+    predictions = map(locations) do loc
+      uₒ = pdomain[loc]
+      predict(krig, var, uₒ)
     end
+
+    varμ = first.(predictions)
+    varσ = last.(predictions)
 
     varμ, varσ
 end
