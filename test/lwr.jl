@@ -1,9 +1,9 @@
 @testset "LWR" begin
   # 1D regression
-  Random.seed!(2017)
+  rng = MersenneTwister(2017)
   N = 100
   x = range(0, stop=1, length=N)
-  y = x.^2 .+ [i/1000*randn() for i=1:N]
+  y = x.^2 .+ [i/1000*randn(rng) for i=1:N]
 
   sdata   = georef((y=y,), reshape(x, 1, length(x)))
   sdomain = CartesianGrid((0.,), (1.,), dims=(N,))

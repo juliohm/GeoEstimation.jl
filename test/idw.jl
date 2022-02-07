@@ -45,7 +45,7 @@
   S = solution[:z]
 
   # basic checks
-  @test CoDa.distance(S[inds[25,25]], Composition(0.1,0.2)) < 1e-2
-  @test CoDa.distance(S[inds[50,75]], Composition(0.3,0.4)) < 1e-2
-  @test CoDa.distance(S[inds[75,50]], Composition(0.5,0.6)) < 1e-2
+  @test aitchison(S[inds[25,25]], Composition(0.1,0.2)) < 1e-2
+  @test aitchison(S[inds[50,75]], Composition(0.3,0.4)) < 1e-2
+  @test aitchison(S[inds[75,50]], Composition(0.5,0.6)) < 1e-2
 end
