@@ -1,7 +1,7 @@
 name = "GeoEstimation"
 uuid = "a4aa24f8-9f24-4d1a-b848-66d123bfa54d"
 authors = ["Júlio Hoffimann <julio.hoffimann@gmail.com> and contributors"]
-version = "0.9.6"
+version = "0.9.7"
 
 [deps]
 Distances = "b4f34e82-e78d-54a5-968a-f98e89d6e8f7"
@@ -16,7 +16,7 @@ Variography = "04a0146e-e6df-5636-8d7f-62fa9eb0b20c"
 Distances = "0.9, 0.10"
 GeoStatsBase = "0.26"
 KrigingEstimators = "0.9"
-Meshes = "0.22"
+Meshes = "0.22, 0.23"
 NearestNeighbors = "0.4"
 Variography = "0.13, 0.14"
 julia = "1.6"
