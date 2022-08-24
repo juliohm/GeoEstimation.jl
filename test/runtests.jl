@@ -4,6 +4,7 @@ using GeoStatsBase
 using Variography
 using Distances
 using Plots; gr(size=(600,400))
+using MeshPlots # TODO: replace by MeshViz
 using ReferenceTests, ImageIO
 using Test, Random
 using CoDa

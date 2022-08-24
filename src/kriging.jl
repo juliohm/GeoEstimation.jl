@@ -73,9 +73,7 @@ end
 
 function preprocess(problem::EstimationProblem, solver::Kriging)
   # retrieve problem info
-  pdomain = domain(problem)
-  pdata   = data(problem)
-  ndata   = nelements(pdata)
+  pdata = data(problem)
 
   # result of preprocessing
   preproc = Dict{Symbol,NamedTuple}()
@@ -86,43 +84,21 @@ function preprocess(problem::EstimationProblem, solver::Kriging)
       varparams = covars.params[(var,)]
 
       # determine which Kriging variant to use
-      if varparams.drifts ≠ nothing
-        estimator = ExternalDriftKriging(varparams.variogram, varparams.drifts)
-      elseif varparams.degree ≠ nothing
-        estimator = UniversalKriging(varparams.variogram, varparams.degree, embeddim(pdomain))
-      elseif varparams.mean ≠ nothing
-        estimator = SimpleKriging(varparams.variogram, varparams.mean)
-      else
-        estimator = OrdinaryKriging(varparams.variogram)
-      end
+      estimator = kriging_ui(domain(pdata),
+                             varparams.variogram,
+                             varparams.mean,
+                             varparams.degree,
+                             varparams.drifts)
 
       # determine minimum/maximum number of neighbors
       minneighbors = varparams.minneighbors
       maxneighbors = varparams.maxneighbors
 
-      # determine neighborhood search method
-      if varparams.maxneighbors ≠ nothing
-        # upper bound in maxneighbors
-        maxneighbors > ndata && (maxneighbors = ndata)
-        if varparams.neighborhood ≠ nothing
-          # local search with a neighborhood
-          neigh = varparams.neighborhood
-
-          if neigh isa MetricBall
-            bsearcher = KBallSearch(pdata, maxneighbors, neigh)
-          else
-            searcher  = BallSearch(pdata, neigh)
-            bsearcher = BoundedSearch(searcher, maxneighbors)
-          end
-        else
-          # nearest neighbor search with a distance
-          distance  = varparams.distance
-          bsearcher = KNearestSearch(pdata, maxneighbors, metric=distance)
-        end
-      else
-        # use all data points as neighbors
-        bsearcher = nothing
-      end
+      # determine bounded search method
+      bsearcher = searcher_ui(domain(pdata),
+                              varparams.maxneighbors,
+                              varparams.distance,
+                              varparams.neighborhood)
 
       # save preprocessed input
       preproc[var] = (estimator=estimator,
